@@ -11,6 +11,42 @@ function App() {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState('')
+
+  const displayMessage = (message, status) =>{
+    let divStyle = {
+      background: 'smoke',
+      color: 'green',
+      border: '3px solid green',
+      margin: '20px',
+      padding: '0px 0px 0px 20px'
+    }
+
+    if(status === 'error'){
+      const messageData = message.response.data
+      // messageData is an object with .error property
+
+      divStyle = {
+        background: 'smoke',
+        color: 'red',
+        border: '3px solid red',
+        margin: '20px',
+        padding: '0px 0px 0px 20px'
+      } 
+      return (
+        <div style={divStyle}>
+          {messageData.error}
+        </div>
+      )
+    }else{
+      const {title, author} = message
+      return (
+        <div style={divStyle}>
+          {title} added by {author}
+        </div>
+      )
+    }
+  }
 
   const submitBlog = async event =>{
     event.preventDefault()
@@ -21,11 +57,14 @@ function App() {
     }
 
     const newBlog = await blogService.createBlog(blogToAdd)
+    const newMessage = displayMessage(newBlog)
 
     setBloglist(blogList.concat(newBlog))
+    setMessage(newMessage)
     setTitle('')
     setAuthor('')
     setUrl('')
+    setTimeout(()=> setMessage(''), 5000)
   }
 
   const blogForm = () => (
@@ -76,19 +115,31 @@ function App() {
     helper()
   },[])
 
+  //watch here---------------------------------
+
   const loginHandler = async (event) => {
     event.preventDefault()
+
     const credentials = {
       username: userName,
       password
     }
 
-    const userData = await loginService.login(credentials)
-    window.localStorage.setItem('loggedUser', JSON.stringify(userData))
+    try{
+      const userData = await loginService.login(credentials)
+      window.localStorage.setItem('loggedUser', JSON.stringify(userData))
 
-    setUser(userData)
-    blogService.setToken(userData)
-    console.log(userData)
+      setUser(userData)
+      blogService.setToken(userData)
+      //console.log(userData)
+    }catch(exception){
+      const newMessage = displayMessage(exception, 'error')
+      setUserName('')
+      setPassword('')
+      setMessage(newMessage)
+      setTimeout(()=> setMessage(''), 5000)
+      console.log(exception.response)
+    }
   }
 
   const loginForm = () => (
@@ -140,6 +191,7 @@ function App() {
   )
   return (
     <div>
+      {message}
       {
         user === null
         ? loginForm()

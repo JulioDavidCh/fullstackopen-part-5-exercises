@@ -1,10 +1,14 @@
-import React,{ useState, useEffect} from 'react';
+import React,{ useState, useEffect} from 'react'
 import loginService from './services/login'
 import blogService from './services/blogs'
-import DisplayBlog from './components/Blog'
+import FormsComponent from './components/Forms'
+import DisplayMessage from './components/DisplayMessage'
+import DisplayBlogs from './components/DisplayBlogs'
+
+const {LoginForm} = FormsComponent
 
 function App() {
-  const [userName, setUserName] = useState('')
+  const [userName, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogList, setBloglist] = useState([])
@@ -13,95 +17,6 @@ function App() {
   const [url, setUrl] = useState('')
   const [message, setMessage] = useState('')
 
-  const displayMessage = (message, status) =>{
-    let divStyle = {
-      background: 'smoke',
-      color: 'green',
-      border: '3px solid green',
-      margin: '20px',
-      padding: '0px 0px 0px 20px'
-    }
-
-    if(status === 'error'){
-      const messageData = message.response.data
-      // messageData is an object with .error property
-
-      divStyle = {
-        background: 'smoke',
-        color: 'red',
-        border: '3px solid red',
-        margin: '20px',
-        padding: '0px 0px 0px 20px'
-      } 
-      return (
-        <div style={divStyle}>
-          {messageData.error}
-        </div>
-      )
-    }else{
-      const {title, author} = message
-      return (
-        <div style={divStyle}>
-          {title} added by {author}
-        </div>
-      )
-    }
-  }
-
-  const submitBlog = async event =>{
-    event.preventDefault()
-    const blogToAdd = {
-      title,
-      author,
-      url
-    }
-
-    const newBlog = await blogService.createBlog(blogToAdd)
-    const newMessage = displayMessage(newBlog)
-
-    setBloglist(blogList.concat(newBlog))
-    setMessage(newMessage)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setTimeout(()=> setMessage(''), 5000)
-  }
-
-  const blogForm = () => (
-    <div>
-      <form onSubmit={submitBlog}>
-        <div>
-          Title: 
-          <input
-            type='text'
-            value={title}
-            name='blogTitle'
-            onChange={({target}) => setTitle(target.value)} 
-          />
-        </div>
-        <div>
-          Author: 
-          <input
-            type='text'
-            value={author}
-            name='blogAuthor'
-            onChange={({target}) => setAuthor(target.value)} 
-          />
-        </div>
-        <div>
-          Url: 
-          <input
-            type='text'
-            value={url}
-            name='blogUrl'
-            onChange={({target}) => setUrl(target.value)} 
-          />
-        </div>
-        <button type='submit'>Create</button>
-      </form>
-    </div>
-  )
-  
   useEffect(()=>{
     const helper = async()=>{
       const storedUser = window.localStorage.getItem('loggedUser')
@@ -114,6 +29,33 @@ function App() {
     }
     helper()
   },[])
+
+  const submitBlog = async event =>{
+    event.preventDefault()
+    const blogToAdd = {
+      title,
+      author,
+      url
+    }
+
+    const newBlog = await blogService.createBlog(blogToAdd)
+    const newMessage = <DisplayMessage
+      message={newBlog}
+      title={title}
+      author={author}
+    />
+
+    setBloglist(blogList.concat(newBlog))
+    setMessage(newMessage)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    setTimeout(()=> setMessage(''), 5000)
+  }
+
+  const titleChangeHandler = ({ target }) => setTitle(target.value)
+  const authorChangeHandler = ({ target }) => setAuthor(target.value)
+  const urlChangeHandler = ({ target }) => setUrl(target.value)
 
   //watch here---------------------------------
 
@@ -131,10 +73,14 @@ function App() {
 
       setUser(userData)
       blogService.setToken(userData)
-      //console.log(userData)
     }catch(exception){
-      const newMessage = displayMessage(exception, 'error')
-      setUserName('')
+      const newMessage = <DisplayMessage
+      message={exception}
+      status={'error'}
+      title={title}
+      author={author}
+    />
+      setUsername('')
       setPassword('')
       setMessage(newMessage)
       setTimeout(()=> setMessage(''), 5000)
@@ -142,60 +88,47 @@ function App() {
     }
   }
 
-  const loginForm = () => (
-    <div>
-      <h2>Log in to application</h2>
-      <form onSubmit={loginHandler} >
-        <div>
-          Username: 
-          <input
-          type="text"
-          value={userName}
-          name="Username"
-          onChange={({target}) => setUserName(target.value) }
-          />
-        </div> 
-        <div>
-          Password:
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({target}) => setPassword(target.value) }
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  )
+  const usernameHandler = ({ target }) => setUsername(target.value)
+  const passwordHandler = ({ target }) => setPassword(target.value)
 
   const logoutHandler = event => {
     //event.preventDefault()
     setUser(null)
     window.localStorage.removeItem('loggedUser')
   }
+  
+  const blogData = {
+    title,
+    author,
+    url,
+    user,
+    blogList
+  }
 
-  const displayBlogs = () => (
-    <div>
-      <div>
-        <h2>
-          Blogs:
-        </h2>
-        {user.name} logged in
-        <button onClick={logoutHandler} >logout</button>
-      </div>
-      <br></br>
-      {blogForm()}
-      {blogList.map(blog => <DisplayBlog key={blog.id} blog={blog} />)}
-    </div>
-  )
+  const blogHandlers = {
+    logoutHandler,
+    titleChangeHandler,
+    authorChangeHandler,
+    urlChangeHandler,
+    submitBlog
+  }
+
   return (
     <div>
       {message}
       {
         user === null
-        ? loginForm()
-        : displayBlogs()
+        ? <LoginForm 
+            loginHandler={loginHandler}
+            userName={userName}
+            password={password}
+            onChangeUsermame={usernameHandler}
+            onChangePassword={passwordHandler}
+          />
+        : <DisplayBlogs 
+            blogData={blogData}
+            blogHandlers={blogHandlers}
+          />
       }
     </div>
   )

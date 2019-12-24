@@ -56,9 +56,7 @@ function App() {
   const titleChangeHandler = ({ target }) => setTitle(target.value)
   const authorChangeHandler = ({ target }) => setAuthor(target.value)
   const urlChangeHandler = ({ target }) => setUrl(target.value)
-
-  //watch here---------------------------------
-
+  
   const loginHandler = async (event) => {
     event.preventDefault()
 

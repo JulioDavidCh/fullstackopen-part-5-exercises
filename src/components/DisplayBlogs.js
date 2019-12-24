@@ -1,6 +1,7 @@
 import React from 'react'
 import DisplayBlog from './Blog'
 import Forms from './Forms'
+import Togglable from './Togglable'
 
 const {BlogForm} = Forms
 
@@ -17,15 +18,17 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
       <button onClick={logoutHandler} >logout</button>
     </div>
     <br></br>
-    <BlogForm
-      title={title}
-      author={author}
-      url={url}
-      titleChangeHandler={titleChangeHandler}
-      authorChangeHandler={authorChangeHandler}
-      urlChangeHandler={urlChangeHandler}
-      submitBlog={submitBlog}
-    />
+    <Togglable buttonLabel={'New Blog'}>
+      <BlogForm
+        title={title}
+        author={author}
+        url={url}
+        titleChangeHandler={titleChangeHandler}
+        authorChangeHandler={authorChangeHandler}
+        urlChangeHandler={urlChangeHandler}
+        submitBlog={submitBlog}
+      />
+    </Togglable>
     {blogList.map(blog => <DisplayBlog key={blog.id} blog={blog} />)}
   </div>
   )

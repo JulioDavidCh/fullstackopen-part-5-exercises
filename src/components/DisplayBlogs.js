@@ -29,7 +29,7 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
         submitBlog={submitBlog}
       />
     </Togglable>
-    {blogList.map(blog => <DisplayBlog key={blog.id} blog={blog} />)}
+    {blogList.map(blog => <DisplayBlog key={blog.id} blogData={blog} />)}
   </div>
   )
 }

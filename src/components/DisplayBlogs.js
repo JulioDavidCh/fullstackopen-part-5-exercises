@@ -64,7 +64,13 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
       }
 
       return(
-        <DisplayBlog key={blog.id} blogData={blog} likeHandler={onLikeHandler} deleteHandler={onRemoveHandler} />
+        <DisplayBlog
+          key={blog.id}
+          blogData={blog}
+          likeHandler={onLikeHandler}
+          deleteHandler={onRemoveHandler}
+          loggedUser={user}
+        />
       )
     })}
   </div>

@@ -8,11 +8,18 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blogData, likeHandler, deleteHandler }) => {
+const Blog = ({ blogData, likeHandler, deleteHandler, loggedUser }) => {
   const [showBlog, setShowBlog] = useState(false)
+  let deleteBlogButton = ''
 
   let onClickHideHandler = () => {
     setShowBlog(!showBlog)
+  }
+
+  if(loggedUser.username === blogData.user.username){
+    deleteBlogButton = (
+      <button onClick={deleteHandler}>Remove</button>
+    )
   }
 
   const completeBlog = (
@@ -21,7 +28,7 @@ const Blog = ({ blogData, likeHandler, deleteHandler }) => {
      <a href={blogData.url}>{blogData.url}</a>
      <p>likes: {blogData.likes}  <button onClick={likeHandler}>Like</button></p>
      <p>added by {blogData.user.username}</p>
-     <button onClick={deleteHandler}>Remove</button>
+     {deleteBlogButton}
     </div>
   )
 

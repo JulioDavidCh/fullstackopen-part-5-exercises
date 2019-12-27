@@ -1,56 +1,79 @@
 import React,{ useState } from 'react'
-import BlogService from '../services/blogs'
 
-const Blog = ({ blogData }) => {
-  const [blog, setBlog] = useState('')
-  let showWholeBlog = false
-  const [currentBlog, setCurrentBlog] = useState(blogData)
+const blogStyle = {
+  paddingTop: 10,
+  paddingLeft: 2,
+  border: 'solid',
+  borderWidth: 1,
+  marginBottom: 5
+}
 
-  const {title, author, url, likes, id} = currentBlog
+const Blog = ({ blogData, likeHandler }) => {
+  const [showBlog, setShowBlog] = useState(false)
 
-  const onClickHideHandler = () => {
-    if(showWholeBlog) setBlog(completeBlog)
-    if(!showWholeBlog) setBlog('')
-    showWholeBlog = !showWholeBlog
+  let onClickHideHandler = () => {
+    setShowBlog(!showBlog)
   }
 
-  const onLikeHandler = async event => {
-
-    //event.stopPropagation()
-
-    const likedBlog = {
-      title,
-      author,
-      url,
-      likes: likes + 1,
-      id
-    }
-    const updatedBlog = await BlogService.updateBlog(likedBlog)
-    setCurrentBlog(updatedBlog)
-  }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
   const completeBlog = (
     <div>
-      <br></br>
-      <a href={currentBlog.url}>{currentBlog.url}</a>
-      <p>likes: {currentBlog.likes}  <button onClick={onLikeHandler}>Like</button></p>
-      <p>added by {currentBlog.user.username}</p>
+     <br></br>
+     <a href={blogData.url}>{blogData.url}</a>
+     <p>likes: {blogData.likes}  <button onClick={likeHandler}>Like</button></p>
+     <p>added by {blogData.user.username}</p>
     </div>
   )
 
   return (
     <div onClick={onClickHideHandler} style={blogStyle}>
-      {currentBlog.title} {currentBlog.author}
-      {blog}
+      {blogData.title} {blogData.author}
+      {
+        showBlog
+        ? completeBlog
+        : ''
+      }
     </div>
   )
 }
 
 export default Blog
+
+// import React,{ useState } from 'react'
+
+// const blogStyle = {
+//   paddingTop: 10,
+//   paddingLeft: 2,
+//   border: 'solid',
+//   borderWidth: 1,
+//   marginBottom: 5
+// }
+
+// const Blog = ({ blogData }) => {
+//   const [showBlog, setShowBlog] = useState(false)
+
+//   let onClickHideHandler = () => {
+//     setShowBlog(!showBlog)
+//   }
+
+//   const completeBlog = (
+//     <div>
+//      <br></br>
+//      <a href={currentBlog.url}>{currentBlog.url}</a>
+//      <p>likes: {currentBlog.likes}  <button onClick={likeHandler}>Like</button></p>
+//      <p>added by {currentBlog.user.username}</p>
+//     </div>
+//   )
+
+//   return (
+//     <div onClick={onClickHideHandler} style={blogStyle}>
+//       {blogData.title} {blogData.author}
+//       {
+//         showBlog
+//         ? completeBlog
+//         : ''
+//       }
+//     </div>
+//   )
+// }
+
+// export default Blog

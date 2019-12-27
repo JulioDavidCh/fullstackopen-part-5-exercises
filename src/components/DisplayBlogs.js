@@ -1,13 +1,20 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import DisplayBlog from './Blog'
 import Forms from './Forms'
 import Togglable from './Togglable'
+import BlogService from '../services/blogs'
 
 const {BlogForm} = Forms
 
 const DisplayBlogs = ({ blogData, blogHandlers }) => {
   const {user, title, author, url, blogList} = blogData
   const {titleChangeHandler, authorChangeHandler, urlChangeHandler, logoutHandler, submitBlog} = blogHandlers
+  const [allBlogs, setAllBlogs] = useState(blogList)
+
+  useEffect(()=>{
+    setAllBlogs(blogList)
+  },[blogList])
+
   return(
     <div>
     <div>
@@ -29,7 +36,23 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
         submitBlog={submitBlog}
       />
     </Togglable>
-    {blogList.map(blog => <DisplayBlog key={blog.id} blogData={blog} />)}
+    {allBlogs.map(blog =>{
+      
+      const likedBlog = {...blog}
+      likedBlog.likes = likedBlog.likes + 1
+      
+      const onLikeHandler = async event =>{
+        const AllTheBlog = [...allBlogs]
+        const updatedBlog = await BlogService.updateBlog(likedBlog)
+        const findIndexBlog = AllTheBlog.findIndex(blog => blog.id === updatedBlog.id)
+        AllTheBlog[findIndexBlog] = updatedBlog
+        setAllBlogs(AllTheBlog)
+      }
+
+      return(
+        <DisplayBlog key={blog.id} blogData={blog} likeHandler={onLikeHandler} />
+      )
+    })}
   </div>
   )
 }

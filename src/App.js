@@ -39,6 +39,14 @@ function App() {
     }
 
     const newBlog = await blogService.createBlog(blogToAdd)
+
+    const ourUser = {
+      username: JSON.parse(window.localStorage.getItem('loggedUser')).username,
+      name: JSON.parse(window.localStorage.getItem('loggedUser')).name
+    }
+
+    newBlog.user = ourUser
+
     const newMessage = <DisplayMessage
       message={newBlog}
       title={title}
@@ -90,7 +98,6 @@ function App() {
   const passwordHandler = ({ target }) => setPassword(target.value)
 
   const logoutHandler = event => {
-    //event.preventDefault()
     setUser(null)
     window.localStorage.removeItem('loggedUser')
   }

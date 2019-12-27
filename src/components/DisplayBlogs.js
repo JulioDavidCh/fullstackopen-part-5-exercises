@@ -10,6 +10,7 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
   const {user, title, author, url, blogList} = blogData
   const {titleChangeHandler, authorChangeHandler, urlChangeHandler, logoutHandler, submitBlog} = blogHandlers
   const [allBlogs, setAllBlogs] = useState(blogList)
+  const sortedBlogs = allBlogs.sort((a,b)=> b.likes - a.likes)
 
   useEffect(()=>{
     setAllBlogs(blogList)
@@ -36,7 +37,7 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
         submitBlog={submitBlog}
       />
     </Togglable>
-    {allBlogs.map(blog =>{
+    {sortedBlogs.map(blog =>{
       
       const likedBlog = {...blog}
       likedBlog.likes = likedBlog.likes + 1

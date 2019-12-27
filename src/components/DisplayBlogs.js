@@ -50,8 +50,17 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
         setAllBlogs(AllTheBlog)
       }
 
+      const onRemoveHandler = async event =>{
+        if(window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`)){
+          const blogToDeleteId = blog.id
+          BlogService.deleteBlog(blogToDeleteId)
+          const updatedBlogs = [...allBlogs].filter(nextBlog => nextBlog.id !== blogToDeleteId)
+          setAllBlogs(updatedBlogs)
+        }
+      }
+
       return(
-        <DisplayBlog key={blog.id} blogData={blog} likeHandler={onLikeHandler} />
+        <DisplayBlog key={blog.id} blogData={blog} likeHandler={onLikeHandler} deleteHandler={onRemoveHandler} />
       )
     })}
   </div>

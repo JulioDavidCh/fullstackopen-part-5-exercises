@@ -51,11 +51,15 @@ const DisplayBlogs = ({ blogData, blogHandlers }) => {
       }
 
       const onRemoveHandler = async event =>{
-        if(window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`)){
-          const blogToDeleteId = blog.id
-          BlogService.deleteBlog(blogToDeleteId)
-          const updatedBlogs = [...allBlogs].filter(nextBlog => nextBlog.id !== blogToDeleteId)
-          setAllBlogs(updatedBlogs)
+        try{
+          if(window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`)){
+            const blogToDeleteId = blog.id
+            await BlogService.deleteBlog(blogToDeleteId)
+            const updatedBlogs = [...allBlogs].filter(nextBlog => nextBlog.id !== blogToDeleteId)
+            setAllBlogs(updatedBlogs)
+          }
+        }catch(exception){
+          console.error(exception)
         }
       }
 

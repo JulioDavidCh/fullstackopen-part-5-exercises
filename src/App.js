@@ -1,11 +1,11 @@
-import React,{ useState, useEffect} from 'react'
+import React,{ useState, useEffect } from 'react'
 import loginService from './services/login'
 import blogService from './services/blogs'
 import FormsComponent from './components/Forms'
 import DisplayMessage from './components/DisplayMessage'
 import DisplayBlogs from './components/DisplayBlogs'
 
-const {LoginForm} = FormsComponent
+const { LoginForm } = FormsComponent
 
 function App() {
   const [userName, setUsername] = useState('')
@@ -17,8 +17,8 @@ function App() {
   const [url, setUrl] = useState('')
   const [message, setMessage] = useState('')
 
-  useEffect(()=>{
-    const helper = async()=>{
+  useEffect(() => {
+    const helper = async() => {
       const storedUser = window.localStorage.getItem('loggedUser')
       if(storedUser){
         setUser(JSON.parse(storedUser))
@@ -30,7 +30,7 @@ function App() {
     helper()
   },[])
 
-  const submitBlog = async event =>{
+  const submitBlog = async event => {
     event.preventDefault()
     const blogToAdd = {
       title,
@@ -49,8 +49,6 @@ function App() {
 
     const newMessage = <DisplayMessage
       message={newBlog}
-      title={title}
-      author={author}
     />
 
     setBloglist(blogList.concat(newBlog))
@@ -58,13 +56,13 @@ function App() {
     setTitle('')
     setAuthor('')
     setUrl('')
-    setTimeout(()=> setMessage(''), 5000)
+    setTimeout(() => setMessage(''), 5000)
   }
 
   const titleChangeHandler = ({ target }) => setTitle(target.value)
   const authorChangeHandler = ({ target }) => setAuthor(target.value)
   const urlChangeHandler = ({ target }) => setUrl(target.value)
-  
+
   const loginHandler = async (event) => {
     event.preventDefault()
 
@@ -81,15 +79,13 @@ function App() {
       blogService.setToken(userData)
     }catch(exception){
       const newMessage = <DisplayMessage
-      message={exception}
-      status={'error'}
-      title={title}
-      author={author}
-    />
+        message={exception}
+        status={'error'}
+      />
       setUsername('')
       setPassword('')
       setMessage(newMessage)
-      setTimeout(()=> setMessage(''), 5000)
+      setTimeout(() => setMessage(''), 5000)
       console.log(exception.response)
     }
   }
@@ -97,11 +93,11 @@ function App() {
   const usernameHandler = ({ target }) => setUsername(target.value)
   const passwordHandler = ({ target }) => setPassword(target.value)
 
-  const logoutHandler = event => {
+  const logoutHandler = () => {
     setUser(null)
     window.localStorage.removeItem('loggedUser')
   }
-  
+
   const blogData = {
     title,
     author,
@@ -123,14 +119,14 @@ function App() {
       {message}
       {
         user === null
-        ? <LoginForm 
+          ? <LoginForm
             loginHandler={loginHandler}
             userName={userName}
             password={password}
             onChangeUsermame={usernameHandler}
             onChangePassword={passwordHandler}
           />
-        : <DisplayBlogs 
+          : <DisplayBlogs
             blogData={blogData}
             blogHandlers={blogHandlers}
           />
@@ -139,4 +135,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

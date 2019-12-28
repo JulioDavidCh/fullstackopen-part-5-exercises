@@ -10,20 +10,20 @@ const LoginForm = ({ loginHandler, userName, password, onChangeUsermame, onChang
       <label>
         Username:
         <input
-        type="text"
-        value={userName}
-        name="Username"
-        onChange={onChangeUsermame}
+          type="text"
+          value={userName}
+          name="Username"
+          onChange={onChangeUsermame}
         />
       </label>
       <div>
         <label>
           Password:
           <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={onChangePassword}
+            type="password"
+            value={password}
+            name="Password"
+            onChange={onChangePassword}
           />
         </label>
       </div>
@@ -36,30 +36,30 @@ const BlogForm = ({ title, author, url, titleChangeHandler, authorChangeHandler,
   <div>
     <form onSubmit={submitBlog}>
       <div>
-        Title: 
+        Title:
         <input
           type='text'
           value={title}
           name='blogTitle'
-          onChange={titleChangeHandler} 
+          onChange={titleChangeHandler}
         />
       </div>
       <div>
-        Author: 
+        Author:
         <input
           type='text'
           value={author}
           name='blogAuthor'
-          onChange={authorChangeHandler} 
+          onChange={authorChangeHandler}
         />
       </div>
       <div>
-        Url: 
+        Url:
         <input
           type='text'
           value={url}
           name='blogUrl'
-          onChange={urlChangeHandler} 
+          onChange={urlChangeHandler}
         />
       </div>
       <button type='submit'>Create</button>

@@ -24,11 +24,11 @@ const Blog = ({ blogData, likeHandler, deleteHandler, loggedUser }) => {
 
   const completeBlog = (
     <div>
-     <br></br>
-     <a href={blogData.url}>{blogData.url}</a>
-     <p>likes: {blogData.likes}  <button onClick={likeHandler}>Like</button></p>
-     <p>added by {blogData.user.username}</p>
-     {deleteBlogButton}
+      <br></br>
+      <a href={blogData.url}>{blogData.url}</a>
+      <p>likes: {blogData.likes}  <button onClick={likeHandler}>Like</button></p>
+      <p>added by {blogData.user.username}</p>
+      {deleteBlogButton}
     </div>
   )
 
@@ -37,8 +37,8 @@ const Blog = ({ blogData, likeHandler, deleteHandler, loggedUser }) => {
       {blogData.title} {blogData.author}
       {
         showBlog
-        ? completeBlog
-        : ''
+          ? completeBlog
+          : ''
       }
     </div>
   )

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DisplayMessage = ({ message, status, title, author }) =>{
+const DisplayMessage = ({ message, status }) => {
   let divStyle = {
     background: 'smoke',
     color: 'green',
@@ -19,14 +19,14 @@ const DisplayMessage = ({ message, status, title, author }) =>{
       border: '3px solid red',
       margin: '20px',
       padding: '0px 0px 0px 20px'
-    } 
+    }
     return (
       <div style={divStyle}>
         {messageData.error}
       </div>
     )
   }else{
-    const {title, author} = message
+    const { title, author } = message
     return (
       <div style={divStyle}>
         {title} added by {author}

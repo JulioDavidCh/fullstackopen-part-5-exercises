@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({ loginHandler, userName, password, onChangeUsermame, onChangePassword, }) => (
   <form onSubmit={loginHandler} autoComplete="off" >
@@ -65,6 +66,24 @@ const BlogForm = ({ title, author, url, titleChangeHandler, authorChangeHandler,
     </form>
   </div>
 )
+
+LoginForm.propTypes = {
+  userName: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  loginHandler: PropTypes.func.isRequired,
+  onChangeUsermame: PropTypes.func.isRequired,
+  onChangePassword: PropTypes.func.isRequired,
+}
+
+BlogForm.propTypes = {
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  titleChangeHandler: PropTypes.func.isRequired,
+  authorChangeHandler: PropTypes.func.isRequired,
+  urlChangeHandler: PropTypes.func.isRequired,
+  submitBlog: PropTypes.func.isRequired
+}
 
 export default {
   LoginForm,

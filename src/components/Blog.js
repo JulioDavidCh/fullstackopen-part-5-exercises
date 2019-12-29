@@ -33,7 +33,7 @@ const Blog = ({ blogData, likeHandler, deleteHandler, loggedUser }) => {
   )
 
   return (
-    <div onClick={onClickHideHandler} style={blogStyle}>
+    <div onClick={onClickHideHandler} style={blogStyle} className={'blog'}>
       {blogData.title} {blogData.author}
       {
         showBlog

@@ -9,8 +9,6 @@ import { useField } from './hooks/index'
 const { LoginForm } = FormsComponent
 
 function App() {
-  // const [userName, setUsername] = useState('')
-  // const [password, setPassword] = useState('')
   const userName = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
@@ -70,8 +68,8 @@ function App() {
     event.preventDefault()
 
     const credentials = {
-      username: userName,
-      password
+      username: userName.value,
+      password: password.value
     }
 
     try{
@@ -85,8 +83,8 @@ function App() {
         message={exception}
         status={'error'}
       />
-      // setUsername('')
-      // setPassword('')
+      userName.reset()
+      password.reset()
       setMessage(newMessage)
       setTimeout(() => setMessage(''), 5000)
       console.log(exception.response)

@@ -1,8 +1,8 @@
 let blogs = [
   {
-    title: 'mamas qk?',
+    title: 'qk?',
     author: 'nanone',
-    url: 'www.mamaqk.com',
+    url: 'www.qk.com',
     likes: 10,
     user: {
       username: 'gafo1',
@@ -14,7 +14,7 @@ let blogs = [
   {
     title: 'soy frances',
     author: 'miranda',
-    url: 'www.larping.com',
+    url: 'www.lapng.com',
     likes: 5,
     user: {
       username: 'gafo2',

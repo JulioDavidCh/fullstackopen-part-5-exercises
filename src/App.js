@@ -4,12 +4,15 @@ import blogService from './services/blogs'
 import FormsComponent from './components/Forms'
 import DisplayMessage from './components/DisplayMessage'
 import DisplayBlogs from './components/DisplayBlogs'
+import { useField } from './hooks/index'
 
 const { LoginForm } = FormsComponent
 
 function App() {
-  const [userName, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  // const [userName, setUsername] = useState('')
+  // const [password, setPassword] = useState('')
+  const userName = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
   const [blogList, setBloglist] = useState([])
   const [title, setTitle] = useState('')
@@ -82,16 +85,13 @@ function App() {
         message={exception}
         status={'error'}
       />
-      setUsername('')
-      setPassword('')
+      // setUsername('')
+      // setPassword('')
       setMessage(newMessage)
       setTimeout(() => setMessage(''), 5000)
       console.log(exception.response)
     }
   }
-
-  const usernameHandler = ({ target }) => setUsername(target.value)
-  const passwordHandler = ({ target }) => setPassword(target.value)
 
   const logoutHandler = () => {
     setUser(null)
@@ -121,10 +121,8 @@ function App() {
         user === null
           ? <LoginForm
             loginHandler={loginHandler}
-            userName={userName}
-            password={password}
-            onChangeUsermame={usernameHandler}
-            onChangePassword={passwordHandler}
+            userNameState={userName}
+            passwordState={password}
           />
           : <DisplayBlogs
             blogData={blogData}

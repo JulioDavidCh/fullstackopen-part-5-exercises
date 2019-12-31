@@ -1,30 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const LoginForm = ({ loginHandler, userNameState, passwordState }) => (
-  <form onSubmit={loginHandler} autoComplete="off" >
-    <legend>
-      <h2>Log in to application</h2>
-    </legend>
-    <fieldset>
-      <label>
-        Username:
-        <input
-          {...userNameState}
-        />
-      </label>
-      <div>
+const LoginForm = ({ loginHandler, userNameState, passwordState }) => {
+  const newUserNameState = { ...userNameState }
+  const newPasswordState = { ...passwordState }
+  delete newUserNameState.reset
+  delete newPasswordState.reset
+  return(
+    <form onSubmit={loginHandler} autoComplete="off" >
+      <legend>
+        <h2>Log in to application</h2>
+      </legend>
+      <fieldset>
         <label>
-          Password:
+        Username:
           <input
-            {...passwordState}
+            {...newUserNameState}
           />
         </label>
-      </div>
-      <button type="submit">Login</button>
-    </fieldset>
-  </form>
-)
+        <div>
+          <label>
+          Password:
+            <input
+              {...newPasswordState}
+            />
+          </label>
+        </div>
+        <button type="submit">Login</button>
+      </fieldset>
+    </form>
+  )
+}
 
 const BlogForm = ({ title, author, url, titleChangeHandler, authorChangeHandler, urlChangeHandler, submitBlog }) => (
   <div>

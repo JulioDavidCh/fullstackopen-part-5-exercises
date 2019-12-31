@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const LoginForm = ({ loginHandler, userName, password, onChangeUsermame, onChangePassword, }) => (
+const LoginForm = ({ loginHandler, userNameState, passwordState }) => (
   <form onSubmit={loginHandler} autoComplete="off" >
     <legend>
       <h2>Log in to application</h2>
@@ -10,20 +10,14 @@ const LoginForm = ({ loginHandler, userName, password, onChangeUsermame, onChang
       <label>
         Username:
         <input
-          type="text"
-          value={userName}
-          name="Username"
-          onChange={onChangeUsermame}
+          {...userNameState}
         />
       </label>
       <div>
         <label>
           Password:
           <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={onChangePassword}
+            {...passwordState}
           />
         </label>
       </div>
@@ -68,11 +62,9 @@ const BlogForm = ({ title, author, url, titleChangeHandler, authorChangeHandler,
 )
 
 LoginForm.propTypes = {
-  userName: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  loginHandler: PropTypes.func.isRequired,
-  onChangeUsermame: PropTypes.func.isRequired,
-  onChangePassword: PropTypes.func.isRequired,
+  userNameState: PropTypes.object.isRequired,
+  passwordState: PropTypes.object.isRequired,
+  loginHandler: PropTypes.func.isRequired
 }
 
 BlogForm.propTypes = {

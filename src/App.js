@@ -1,132 +1,81 @@
-import React,{ useState, useEffect } from 'react'
-import loginService from './services/login'
-import blogService from './services/blogs'
-import FormsComponent from './components/Forms'
-import DisplayMessage from './components/DisplayMessage'
-import DisplayBlogs from './components/DisplayBlogs'
-import { useField } from './hooks/index'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
-const { LoginForm } = FormsComponent
 
-function App() {
-  const userName = useField('text')
-  const password = useField('password')
-  const [user, setUser] = useState(null)
-  const [blogList, setBloglist] = useState([])
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [message, setMessage] = useState('')
+const useField = (type) => {
+  const [value, setValue] = useState('')
 
-  useEffect(() => {
-    const helper = async() => {
-      const storedUser = window.localStorage.getItem('loggedUser')
-      if(storedUser){
-        setUser(JSON.parse(storedUser))
-        blogService.setToken(JSON.parse(storedUser))
-      }
-      const blogs = await blogService.getAll()
-      setBloglist(blogs)
+  const onChange = (event) => {
+    setValue(event.target.value)
+  }
+
+  return {
+    type,
+    value,
+    onChange
+  }
+}
+
+const useResource = (baseUrl) => {
+  const [resources, setResources] = useState([])
+
+  useEffect(()=>{
+    const helper = async () =>{
+      const request = await axios.get(baseUrl)
+      setResources(request.data)
     }
     helper()
-  },[])
+  }, [baseUrl])
 
-  const submitBlog = async event => {
+  const create = async (resource) => {
+    const request = await axios.post(baseUrl, resource)
+    console.log(request, request.data)
+    setResources(resources.concat(request.data))
+  }
+
+  const service = {
+    create
+  }
+
+  return [
+    resources, service
+  ]
+}
+
+const App = () => {
+  const content = useField('text')
+  const name = useField('text')
+  const number = useField('text')
+
+  const [notes, noteService] = useResource('http://localhost:3005/notes')
+  const [persons, personService] = useResource('http://localhost:3005/persons')
+
+  const handleNoteSubmit = (event) => {
     event.preventDefault()
-    const blogToAdd = {
-      title,
-      author,
-      url
-    }
-
-    const newBlog = await blogService.createBlog(blogToAdd)
-
-    const ourUser = {
-      username: JSON.parse(window.localStorage.getItem('loggedUser')).username,
-      name: JSON.parse(window.localStorage.getItem('loggedUser')).name
-    }
-
-    newBlog.user = ourUser
-
-    const newMessage = <DisplayMessage
-      message={newBlog}
-    />
-
-    setBloglist(blogList.concat(newBlog))
-    setMessage(newMessage)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setTimeout(() => setMessage(''), 5000)
+    noteService.create({ content: content.value })
   }
-
-  const titleChangeHandler = ({ target }) => setTitle(target.value)
-  const authorChangeHandler = ({ target }) => setAuthor(target.value)
-  const urlChangeHandler = ({ target }) => setUrl(target.value)
-
-  const loginHandler = async (event) => {
+ 
+  const handlePersonSubmit = (event) => {
     event.preventDefault()
-
-    const credentials = {
-      username: userName.value,
-      password: password.value
-    }
-
-    try{
-      const userData = await loginService.login(credentials)
-      window.localStorage.setItem('loggedUser', JSON.stringify(userData))
-
-      setUser(userData)
-      blogService.setToken(userData)
-    }catch(exception){
-      const newMessage = <DisplayMessage
-        message={exception}
-        status={'error'}
-      />
-      userName.reset()
-      password.reset()
-      setMessage(newMessage)
-      setTimeout(() => setMessage(''), 5000)
-      console.log(exception.response)
-    }
-  }
-
-  const logoutHandler = () => {
-    setUser(null)
-    window.localStorage.removeItem('loggedUser')
-  }
-
-  const blogData = {
-    title,
-    author,
-    url,
-    user,
-    blogList
-  }
-
-  const blogHandlers = {
-    logoutHandler,
-    titleChangeHandler,
-    authorChangeHandler,
-    urlChangeHandler,
-    submitBlog
+    personService.create({ name: name.value, number: number.value})
   }
 
   return (
     <div>
-      {message}
-      {
-        user === null
-          ? <LoginForm
-            loginHandler={loginHandler}
-            userNameState={userName}
-            passwordState={password}
-          />
-          : <DisplayBlogs
-            blogData={blogData}
-            blogHandlers={blogHandlers}
-          />
-      }
+      <h2>notes</h2>
+      <form onSubmit={handleNoteSubmit}>
+        <input {...content} />
+        <button>create</button>
+      </form>
+      {notes.map(n => <p key={n.id}>{n.content}</p>)}
+
+      <h2>persons</h2>
+      <form onSubmit={handlePersonSubmit}>
+        name <input {...name} /> <br/>
+        number <input {...number} />
+        <button>create</button>
+      </form>
+      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
     </div>
   )
 }
